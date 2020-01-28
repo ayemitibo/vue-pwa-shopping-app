@@ -15,12 +15,18 @@
             </div>
           </div>
           <div class="ht-right" v="if">
-            <router-link class="login-panel" tag="a" to="/login">
-              <span v-if="profile">
+            <div v-if="profile" class="login-panel">
+              <span>
                 <i class="fa fa-user"></i>
                 Hi {{profile.user_name}}
               </span>
-              <span v-else>
+              <span style="margin-left : 10px;cursor : pointer" @click="logOut">
+                <i class="fa fa-sign-out" style="margin-right : 0px !important"></i>
+                logout
+              </span>
+            </div>
+            <router-link class="login-panel" tag="a" to="/login" v-else>
+              <span>
                 <i class="fa fa-user"></i>Login
               </span>
             </router-link>
@@ -166,7 +172,7 @@
                 <a href="./index.html">Home</a>
               </li>
               <li>
-                <a href="./shop.html">Shop</a>
+                <router-link tag="a" to="/shop">Shop</router-link>
               </li>
               <li>
                 <a href="#">Collection</a>
@@ -182,34 +188,8 @@
                   </li>
                 </ul>
               </li>
-              <li>
-                <a href="./blog.html">Blog</a>
-              </li>
-              <li>
-                <a href="./contact.html">Contact</a>
-              </li>
-              <li>
-                <a href="#">Pages</a>
-                <ul class="dropdown">
-                  <li>
-                    <a href="./blog-details.html">Blog Details</a>
-                  </li>
-                  <li>
-                    <a href="./shopping-cart.html">Shopping Cart</a>
-                  </li>
-                  <li>
-                    <a href="./check-out.html">Checkout</a>
-                  </li>
-                  <li>
-                    <a href="./faq.html">Faq</a>
-                  </li>
-                  <li>
-                    <a href="./register.html">Register</a>
-                  </li>
-                  <li>
-                    <a href="./login.html">Login</a>
-                  </li>
-                </ul>
+              <li v-if="userRole.user_role_label == 'Admin'">
+                <router-link tag="a" to="/add-product">Add Product</router-link>
               </li>
             </ul>
           </nav>
@@ -224,16 +204,28 @@
 export default {
   data() {
     return {
-      profile: ''
+      profile: '',
+      userRole: ''
+    }
+  },
+  methods: {
+    logOut() {
+      localStorage.removeItem('logged_in_user_token')
+      location.replace('/login')
+    },
+    async getProfile() {
+      try {
+        let profile = await this.$store.dispatch('getProfile')
+        console.log(profile)
+        this.profile = profile.data[0]
+        this.userRole = profile.data[0].userRole
+      } catch (error) {
+
+      }
     }
   },
   async mounted() {
-    try {
-      let profile = await this.$store.dispatch('getProfile')
-      this.profile = profile.data[0]
-    } catch (error) {
-
-    }
+    await this.getProfile()
   }
 }
 </script>

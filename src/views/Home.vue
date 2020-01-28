@@ -9,7 +9,7 @@
                             <span style="opacity : 1">{{slide.spanTest}}</span>
                             <h1 style="opacity : 1">{{slide.headTest}}</h1>
                             <p class="animate" style="opacity : 1">{{slide.caption}}</p>
-                            <a href="#" class="primary-btn">Shop Now</a>
+                            <a href="#" class="primary-btn" style="opacity : 1">Shop Now</a>
                         </div>
                     </div>
                 </div>
@@ -327,6 +327,13 @@ export default {
   },
   mounted(){
       this.startRotation();
+  },
+  async created(){
+      try {
+        await this.$parent.getProfile()
+      } catch (error) {
+          
+      }
   }
 }
 
@@ -347,7 +354,7 @@ p.animate{
     margin-top : -50px !important;
     animation-name : animated-p;
     animation-duration: 2s;
-    animation-duration: 2s;
+    animation-delay: 2s;
     animation-iteration-count: 1;
     animation-timing-function: linear
 }

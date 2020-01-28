@@ -33,6 +33,29 @@ export default new Vuex.Store({
       } catch (error) {
         throw error.response;
       }
+    },
+    async getMetaData(context) {
+      try {
+        let apiRequest = await axios.get("metadata");
+        return apiRequest.data.data;
+      } catch (error) {}
+    },
+    async createProduct(context, payload) {
+      try {
+        console.log(payload);
+        let apiRequest = await axios.post("create-product", payload);
+        let result = await apiRequest;
+        return result.data;
+      } catch (error) {}
+    },
+    async getAllProducts() {
+      try {
+        console.log("here");
+        let apiRequest = await axios.get("all-products");
+        return apiRequest.data;
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
   modules: {}
